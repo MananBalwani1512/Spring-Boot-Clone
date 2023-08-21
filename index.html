@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang = 'en'>
+    <head>
+        <title>Student</title>
+        <meta charset = 'utf-8'>
+        <style>
+            .error
+            {
+                color : red;
+                font-weight: bold;
+                margin-top : 5px;
+            }
+        </style>
+        <script src = '/tmWebRock/js/jquery.js'></script>
+        <script src = '/tmWebRock/js/jqueryValidate.js'></script>
+        <script src = '/tmWebRock/getContentJs?name=addStudent'></script>
+        <script src = '/tmWebRock/getJsContent?name=editStudent'></script>
+        <script src = '/tmWebRock/getJsContent?name=deleteStudent'></script>
+        <script src = '/tmWebRock/getJsContent?name=getAll'></script>     
+        <script>
+            $(()=>{
+                $("#addStudent").click(function(){
+                    var validate = {
+                        rules:{
+                            roll : "required",
+                            name : "required",
+                            gender : "required"
+                        }
+                    }
+                   $("#add").validate(validate);
+                   if($("#add").valid())
+                   {
+                        var gender = $("input[name = 'gender']:checked","#add").val();
+                        var data = {
+                            roll : $("#addroll").val(),
+                            name : $("#addname").val(),
+                            'gender':gender
+                        }
+                        function success(result)
+                        {
+                            alert(result);
+                        }
+                        addStudent(JSON.stringify(data),success);
+                   }             
+                });
+                $("#editStudent").click(function(){
+                    var validate = {
+                        rules:{
+                            roll : "required",
+                            name : "required",
+                            gender : "required"
+                        }
+                    }
+                    $("#edit").validate(validate);
+                    if($("#edit").valid())
+                    {
+                        var gender = $("input[name = 'gender']:checked","#edit").val();
+                        var data = {
+                            roll : $("#editroll").val(),
+                            name : $("#editname").val(),
+                            'gender':gender
+                        }
+                        function success(result)
+                        {
+                            alert(result);
+                        }
+                        editStudent(JSON.stringify(data),success);
+                    }
+                });
+                $("#deleteStudent").click(function(){
+                    $("#delete").validate({
+                        rules : {
+                            roll : "required"
+                        }
+                    });
+                    if($("#delete").valid())
+                    {
+                        function success(result)
+                        {
+                            alert(result);
+                        }
+                        deleteStudent({'roll':$("#deleteroll").val()},success);
+                    }
+                });
+                $("#getStudents").click(function(){
+                    function success(result)
+                    {
+                        alert(result);
+                        createTable(JSON.parse(result));
+                    }
+                    getAll(success);
+                });
+            });
+            function createTable(students)
+            {
+                alert(students.length);
+                var tbody = document.getElementsByTagName('tbody')[0];
+                var tr;
+                for(var i = 0; i<students.length; i++)
+                {
+                    var student = students[i];
+                    tr = document.createElement('tr');
+                    var td = document.createElement('td');
+                    td.innerHTML = student.roll;
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td.innerHTML = student.name;
+                    tr.appendChild(td);
+                    td = document.createElement('td');
+                    td.innerHTML = student.gender;
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <fieldset> 
+            <legend>Add Student</legend>
+            <form id = 'add' action = ''>
+            Enter Roll Number : <input type = 'number' name = 'roll' id = 'addroll'>
+            <BR>
+            Enter Name : <input type = 'text' id = 'addname' name = 'name'><BR>
+            Gender : <input type = 'radio' name = 'gender' id = 'addmale' value = 'M'>M
+            <input type = 'radio' name = 'gender' id = 'addfemale' value = 'F'>F
+            <span><label for = "gender" class = 'error'></label></span>
+            <BR>
+            <button type = 'button' id = 'addStudent'>Add Student</button>
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Edit Student</legend>
+            <form id = 'edit' action = 'student/editStudent'>
+            Enter Roll Number : <input type = 'number' name = 'roll' id = 'editroll'><BR>
+            Enter Name : <input type = 'text' name = 'name' id = 'editname'><BR>
+            Enter Gender : <input type = 'radio' name = 'gender' value = 'M' id = 'male'>M
+            <input type = 'radio' name = 'gender' value = 'F' id = 'female'>F<BR>
+            <span><label for = "gender" class = "error"></label></span>
+            <button type = 'button' id = 'editStudent'>Edit Student</button>        
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Delete Student</legend>
+            <form id = 'delete' action = 'student/deleteStudent'>
+            Enter Roll : <input type = 'number' name = 'roll' id = 'deleteroll'><BR>
+            <button type = 'button' id = 'deleteStudent'>Delete Student</button>
+            </form>
+        </fieldset>
+        <fieldset>
+            <legend>Get All Students</legend>
+            <button type = 'button' id = 'getStudents'>Get All Students</button>
+            <table id = 'students' border = '1px solid black'>
+                <thead>
+                    <tr>
+                        <th>Roll Number</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>    
+        </fieldset>
+    </body>
+
+</html>

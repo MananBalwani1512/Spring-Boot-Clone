@@ -1,0 +1,27 @@
+<web-app>
+	<servlet>
+		<servlet-name>tmWebRock</servlet-name>
+		<servlet-class>com.thinking.machine.webRock.tmWebRock</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>tmWebRock</servlet-name>
+		<url-pattern>/student/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>webRockModel</servlet-name>
+		<servlet-class>com.thinking.machine.webRock.model.webRockModel</servlet-class>
+		<init-param>
+			<param-name>SERVICE_PACKAGE_PREFIX</param-name>
+			<param-value>Student.Service</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>getJsContent</servlet-name>
+		<servlet-class>com.thinking.machine.webRock.GetJsContent</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getJsContent</servlet-name>
+		<url-pattern>/getJsContent</url-pattern>
+	</servlet-mapping>
+</web-app>
