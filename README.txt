@@ -8,7 +8,7 @@ Here I am representing a new project on creating a small clone of spring boot.
 4. No need to write any servlet
 5. Can access all parameters and attributes easily by using annotations
 
-#Steps Of Usage : 
+# Steps Of Usage : 
 1. The User Has to write a java class file and write annotations on everu class and method of '@Paht(Path="mention the path by which method or class will be called")'
 2. He should give a path in web.xml for com.thinking.machine.webRock.tmWebRock for path (@Path(Path="path given to the class"))
 as the parameter-value in web.xml
