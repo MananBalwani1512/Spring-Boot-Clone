@@ -1,12 +1,14 @@
-Hello Myself Manan Balwani
-Here I am representing a new project on creating a small clone of spring boot
-Features : 
+# Overview
+Here I am representing a new project on creating a small clone of spring boot.
+Where it will be very easy for user to create website and minimum coding on server side
+# Features : 
 1. No need to create seperate servlets
 2. No need to specify paths for each method in web.xml
 3. No need to create a Js file for writing basic functions of ajax call
 4. No need to write any servlet
 5. Can access all parameters and attributes easily by using annotations
-Steps Of Usage : 
+
+#Steps Of Usage : 
 1. The User Has to write a java class file and write annotations on everu class and method of '@Paht(Path="mention the path by which method or class will be called")'
 2. He should give a path in web.xml for com.thinking.machine.webRock.tmWebRock for path (@Path(Path="path given to the class"))
 as the parameter-value in web.xml
@@ -19,6 +21,8 @@ to get attributes we need to mention name in AutoWire annotation and create a fi
 7. In Html file include scripts by the below line of code
 <script src = '/tmWebRock/getJsContent?name=mention name of method which is needed to be called'></script>
 8. Call the method as you want and pass the method the data (if required) and a function which tells after successfull response which action should be document
-EXAMPLE : 
+
+
+# EXAMPLE : 
 For instance I have Provided index.html for HTML code
 And in WEB-INF/classes/Student/Service folder I have provided Student.java file which will help you to know each and every feature of the framework
