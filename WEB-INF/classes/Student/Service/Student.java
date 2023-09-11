@@ -123,4 +123,10 @@ public class Student
         }
         return ans;
     }
+	@OnStartup()
+	public void printMessage()
+	{
+		System.out.println("We Have Initialised Project Student for you.");
+		System.out.println("Hope It works fine.");
+	}
 }

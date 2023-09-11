@@ -11,12 +11,14 @@ public class webRockModel extends HttpServlet
 {
 	public void init() throws ServletException
 	{
-		try {
+		try
+		{
 		HashMap<String,Service>map = new HashMap();
 		String className = getServletConfig().getInitParameter("SERVICE_PACKAGE_PREFIX");
 		String folderName = className.replace('.','/');
 		ServletContext sc = getServletContext();
-		File file = new File("C:/Tomcat9/webapps/tmWebRock/WEB-INF/classes/"+folderName);
+		String servletPath = sc.getRealPath("/WEB-INF/classes");
+		File file = new File(servletPath+"/"+folderName);
 		ArrayList<String>list = new ArrayList(Arrays.asList(file.list()));
 		Class c = null;
 		Object obj = null;
@@ -27,7 +29,6 @@ public class webRockModel extends HttpServlet
 			try
 			{
 				f = f.substring(0,f.indexOf('.'));
-				System.out.println(f);
 				c = Class.forName(className+"."+f);	
 			}
 			catch(Exception e)
@@ -35,7 +36,6 @@ public class webRockModel extends HttpServlet
 				e.printStackTrace();
 			}
 			Field[] fields = c.getDeclaredFields();	
-			System.out.println(fields.length);
 			obj = c.newInstance();
 			List<Service>autoWire = new ArrayList();
 			Service serviceClass = new Service();
@@ -54,11 +54,9 @@ public class webRockModel extends HttpServlet
 				if(field.isAnnotationPresent(AutoWire.class))
 				{
 					AutoWire annotation = (AutoWire)field.getAnnotation(AutoWire.class);
-					System.out.println(annotation.name());
 					if(annotation.name().equals(""))
 					{
 						serviceClass.setIsAutoWire(false);
-						System.out.println("Going to set feild in webRockModel");
 						if(field.getType().equals(RequestScope.class))
 						{
 							serviceClass.setIsRequestScope(true);
@@ -71,7 +69,6 @@ public class webRockModel extends HttpServlet
 						}
 						else if(field.getType().equals(ApplicationScope.class))
 						{
-							System.out.println("setting applicationScope in webRockModel");
 							serviceClass.setIsApplicationScope(true);
 							serviceClass.setApplicationScope(field);
 						}
@@ -92,20 +89,20 @@ public class webRockModel extends HttpServlet
 			String classPath = path.Path();
 			
 			sc.setAttribute(classPath,obj);
-			System.out.println(methods.length);
 			for(Method m : methods)
 			{
 				createJs(m, classPath);
 				List<Parameter>par = new ArrayList();
-				System.out.println("For Loop Working");
 				Service ser = new Service();
 				getSecuredAccess(m,ser);
-				Path p = (Path)m.getAnnotation(Path.class);
-				String URL = classPath+p.Path();
-				ser.setURL(URL);
-				ser.setMethod(m);
-				System.out.println(m.getName());
-				System.out.println("Before If Comdition");
+				String URL = "";
+				if(m.isAnnotationPresent(Path.class))
+				{
+					Path p = (Path)m.getAnnotation(Path.class);
+					URL = classPath+p.Path();
+					ser.setURL(URL);
+					ser.setMethod(m);
+				}
 				Parameter[] parameters = m.getParameters();
 				for(Parameter parameter : parameters)
 				{
@@ -125,22 +122,18 @@ public class webRockModel extends HttpServlet
 				ser.setRequestParameters(par);
 				if(m.isAnnotationPresent(OnStartup.class))
 				{
-					try {
-					System.out.println("Inside If Condition of annotationa");
-					OnStartup on = (OnStartup)m.getAnnotation(OnStartup.class);
-					System.out.println("Going outside");
-					Startup st = new Startup();
-							System.out.println("Going outside BITCH");
-					st.priority = on.Priority();
-					st.method = m;
-					System.out.println("Going outside");
-					s.add(st);
-					}catch(Exception e)
+					try
 					{
-						System.out.println("KUTTA");
+						OnStartup on = (OnStartup)m.getAnnotation(OnStartup.class);
+						Startup st = new Startup();
+						st.priority = on.Priority();
+						st.method = m;
+						s.add(st);
+					}	
+					catch(Exception e)
+					{
 						e.printStackTrace();
 					}
-					
 				}	
 				if(m.isAnnotationPresent(Get.class))
 					ser.setMethodType("GET");
@@ -150,14 +143,12 @@ public class webRockModel extends HttpServlet
 					ser.setMethodType("ANY");
 				if(m.isAnnotationPresent(ForwardTo.class))
 				{
-					System.out.println("Inside Forward");
 					ForwardTo ft = (ForwardTo)m.getAnnotation(ForwardTo.class);
 					ser.setForwardTo(ft.forward());
-					System.out.println("Outside Forward");
 				}
-				map.put(URL,ser);
+				if(m.isAnnotationPresent(Path.class));
+					map.put(URL,ser);
 			}
-			System.out.println(autoWire);
 			sc.setAttribute(classPath+"map",map);
 			sc.setAttribute(classPath+"autoWire",autoWire);
 			sc.setAttribute(classPath+"extract",extract);
@@ -169,12 +160,14 @@ public class webRockModel extends HttpServlet
 					return s1pri-s2pri;
 				}
 			});
+			System.out.println("---------------------------- On Startup ------------------------");
 			for(Startup start : s)
 			{
 				if(start.method == null)
 				{
 					break;
 				}
+				
 				start.method.invoke(obj);
 			}
 		}
@@ -185,7 +178,6 @@ public class webRockModel extends HttpServlet
 	}
 	public static void getSecuredAccess(Method m,Service service)
 	{
-		System.out.println("SECURITY"+m.isAnnotationPresent(SecuredAccess.class));
 		if(m.isAnnotationPresent(SecuredAccess.class))
 		{
 			SecuredAccess sa = (SecuredAccess)m.getAnnotation(SecuredAccess.class);
@@ -195,11 +187,8 @@ public class webRockModel extends HttpServlet
 				Method methods[] = c.getDeclaredMethods();
 				for(Method method : methods)
 				{
-					System.out.println(method.getName());
-					System.out.println(sa.gaurd());
 					if(method.getName().equals(sa.gaurd()))
 					{
-						System.out.println("Method Nm= "+method.getName());
 						service.setIsSecuredAccess(true);
 						service.setCheckPost(c);
 						service.setGaurd(method);
@@ -212,11 +201,16 @@ public class webRockModel extends HttpServlet
 			}
 		}
 	}
+	
 	public void createJs (Method method,String classPath)
 	{
 		try
 		{
-			File file = new File("C:/Tomcat9/webapps/tmWebRock/WEB-INF/js/"+method.getName()+".js");
+			if(method.isAnnotationPresent(Path.class) == false)
+				return;
+			ServletContext sc = getServletContext();
+			String servletPath = sc.getRealPath("/WEB-INF/js");
+			File file = new File(servletPath+"/"+method.getName()+".js");
 			if(file.exists())
 			{
 				file.delete();
@@ -233,6 +227,7 @@ public class webRockModel extends HttpServlet
 				writer.write("function "+method.getName()+"(data,success){\n");
 			}
 			Path path = (Path)method.getAnnotation(Path.class);
+			
 			String methodPath = path.Path();
 			writer.write("var obj = {\n");
 			writer.write("'url' : '"+classPath.substring(1)+methodPath+"',\n");

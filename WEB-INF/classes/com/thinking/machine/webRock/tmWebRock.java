@@ -18,7 +18,6 @@ public class tmWebRock extends HttpServlet
 			Object obj = getServletContext().getAttribute(classPath);
 			HashMap<String,Service>map = (HashMap)getServletContext().getAttribute(classPath+"map");
 			List<Service>autoWire = (List<Service>)getServletContext().getAttribute(classPath+"autoWire");
-			System.out.println("autowire : "+autoWire);
 			for(Service service : autoWire)
 			{
 				getAutoWire(service, obj, request);
@@ -33,14 +32,12 @@ public class tmWebRock extends HttpServlet
 			validate("GET",ser,response);
 			processSecuredAccess(ser,request);
 			Object[]ob = setParameter(ser, request);
-			System.out.println(ser.getIsRequestParameter() || ser.getIsAutoWire());
 			if(void.class.equals(ser.getMethod().getReturnType()))
 			{
 				if(ob == null)
 					ser.getMethod().invoke(obj);
 				else
 				{
-					System.out.println(obj.getClass());
 					ser.getMethod().invoke(obj,ob);
 				}
 			}
@@ -51,7 +48,6 @@ public class tmWebRock extends HttpServlet
 					res = ser.getMethod().invoke(obj);
 				else
 				{
-					System.out.println(obj.getClass());
 					res = ser.getMethod().invoke(obj,ob);
 				}
 				sendResponse(res, response);
@@ -86,17 +82,14 @@ public class tmWebRock extends HttpServlet
 			}
 			Service ser = map.get(classPath+method);
 			validate("POST",ser,response);
-			System.out.println("ITS WORKING");
 			processSecuredAccess(ser,request);
 			Object[]ob = setParameter(ser, request);
-			System.out.println(ser.getIsRequestParameter() || ser.getIsAutoWire());
 			if(void.class.equals(ser.getMethod().getReturnType()))
 			{
 				if(ob == null)
 					ser.getMethod().invoke(obj);
 				else
 				{
-					System.out.println(obj.getClass());
 					ser.getMethod().invoke(obj,ob);
 				}
 			}
@@ -107,7 +100,6 @@ public class tmWebRock extends HttpServlet
 					res = ser.getMethod().invoke(obj);
 				else
 				{
-					System.out.println(obj.getClass());
 					res = ser.getMethod().invoke(obj,ob);
 				}
 				sendResponse(res, response);
@@ -121,13 +113,11 @@ public class tmWebRock extends HttpServlet
 	}
 	public void processSecuredAccess(Service service,HttpServletRequest request)
 	{
-		System.out.println("SECURETIY "+service.getIsSecuredAccess());
 		if(service.getIsSecuredAccess())
 		{
 			try
 			{
 				Class c = service.getCheckPost();
-				System.out.println(c);
 				Method m = service.getGaurd();
 				Parameter parameters[] = m.getParameters();
 				if(parameters.length == 0)
@@ -136,7 +126,6 @@ public class tmWebRock extends HttpServlet
 				{
 					Object obArray[] = new Object[parameters.length];
 					int index = 0;
-					System.out.println(parameters.length);
 					for(Parameter p : parameters)
 					{
 						if(p.isAnnotationPresent(AutoWire.class))
@@ -170,7 +159,6 @@ public class tmWebRock extends HttpServlet
 	{
 		try
 		{
-			System.out.println("Inside autowire");
 			if(service.getIsRequestScope())
 			{
 				service.getRequestScope().set(obj,new RequestScope(request));
@@ -179,7 +167,6 @@ public class tmWebRock extends HttpServlet
 				service.getSessionScope().set(obj,new SessionScope(request));
 			if(service.getIsApplicationScope())
 			{
-				System.out.println("Setting ApplicationScope");
 				service.getApplicationScope().set(obj,new ApplicationScope(getServletContext()));
 			}
 		}
@@ -194,7 +181,6 @@ public class tmWebRock extends HttpServlet
 		{
 			if(service.getIsInjectRequestParameter())
 			{
-				System.out.println(service.getRequestName());
 				String name = service.getRequestName();
 				Field fi = service.getInjectRequestParameter();
 				String val = request.getParameter(name);
@@ -239,7 +225,6 @@ public class tmWebRock extends HttpServlet
 			if(attr == null)
 			{
 				attr = getServletContext().getAttribute(name);
-				System.out.println(attr+" From applicationScope");
 				if(attr != null)
 				{
 					if(attr.getClass().equals(service.getAutoWire().getType()))
@@ -281,7 +266,6 @@ public class tmWebRock extends HttpServlet
 		try
 		{
 			String forward = ser.getForwardTo();
-			System.out.println(forward);
 			if(forward == null)
 				return;
 			if(map.containsKey(classPath+forward))
@@ -292,7 +276,6 @@ public class tmWebRock extends HttpServlet
 			}
 			else
 			{
-				System.out.println("forward"+forward);
 				RequestDispatcher rd = request.getRequestDispatcher(forward);
 				rd.forward(request,response);
 			}
@@ -308,11 +291,9 @@ public class tmWebRock extends HttpServlet
 		List<Parameter>parameters = new ArrayList();
 		try
 		{
-			System.out.println("Setting Parameters");
 			parameters = ser.getRequestParameters();
 			if(parameters.size()>0)
 			{
-				System.out.println("Parameters length"+parameters.size());
 				ob = new Object[parameters.size()];
 				int index = 0;
 				for(Parameter parameter : parameters)
@@ -325,11 +306,8 @@ public class tmWebRock extends HttpServlet
 						{
 							String par = request.getParameter(name);
 							Class type = parameter.getType();
-							System.out.println(type);
-							System.out.println(par);
 							if(type.equals(int.class))
 							{
-								System.out.println("Inside Integer");
 								ob[index++] = Integer.parseInt(par);
 							}
 							else if(type.equals(Character.class))
@@ -359,7 +337,6 @@ public class tmWebRock extends HttpServlet
 					}
 					else
 					{
-						System.out.println("Inside gson");
 						StringBuffer sb = new StringBuffer();
 						BufferedReader br = request.getReader();
 						String d;
@@ -397,8 +374,6 @@ public class tmWebRock extends HttpServlet
 			}
 			else
 			{
-				System.out.println("setting gson response");
-
 				Gson gson = new Gson();
 				String jsonData = gson.toJson(res);
 				out.println(jsonData);
