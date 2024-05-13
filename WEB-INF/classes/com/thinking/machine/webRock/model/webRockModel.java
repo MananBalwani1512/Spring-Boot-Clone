@@ -165,9 +165,8 @@ public class webRockModel extends HttpServlet
 			{
 				if(start.method == null)
 				{
-					break;
+					continue;
 				}
-				
 				start.method.invoke(obj);
 			}
 		}
