@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html lang = 'en'>
+	<head>
+		<title>Spring Boot Clone</title>
+		<meta charset = 'utf-8'>
+		<script src = "getJavascriptFiles?fileName=eg4"></script>
+		<script>
+			function test1()
+			{
+				var x = document.getElementById("x").value;
+				var y = document.getElementById("y").value;
+				var eg4 = new Eg4();
+				eg4.setX(x);
+				eg4.setY(y);
+				var eg4Service = new Eg4Service();
+				var promise = eg4Service.test1(eg4);
+				promise.then((response) => 
+				{
+					alert("Test 1 Successfull");
+				}, () => 
+				{
+					alert("Test 1 Failed");
+				});
+				
+			}
+			function test2()
+			{
+				var rollNumber = document.getElementById("rollNumber").value;
+				var name = document.getElementById("name").value;
+				var dateOfBirth = document.getElementById("dateOfBirth").value;
+				var eg4 = new Eg4();
+				var student = {
+					"rollNumber" : rollNumber,
+					"name" : name,
+					"dateOfBirth" : dateOfBirth
+				};
+				eg4.setStudent(student);
+				var eg4Service = new Eg4Service();
+				var promise = eg4Service.test2(eg4);
+				promise.then((response) => 
+				{
+					alert("Test 2 Successfull");
+				}, () => 
+				{
+					alert("Test 2 Failed");
+				});
+			}
+			function test3()
+			{
+				var x = document.getElementById("x").value;
+				var y = document.getElementById("y").value;
+				var eg4 = new Eg4();
+				eg4.setX(x);
+				eg4.setY(y);
+				var eg4Service = new Eg4Service();
+				var promise = eg4Service.test3(eg4);
+				promise.then((response) => 
+				{
+					alert("Test 3 Successfull");
+				}, () => 
+				{
+					alert("Test 3 Failed");
+				});
+			}
+			function test4()
+			{
+				var rollNumber = document.getElementById("rollNumber").value;
+				var name = document.getElementById("name").value;
+				var dateOfBirth = document.getElementById("dateOfBirth").value;
+				var eg4 = new Eg4();
+				var student = {
+					"rollNumber" : rollNumber,
+					"name" : name,
+					"dateOfBirth" : dateOfBirth
+				};
+				alert(JSON.stringify(student));
+				eg4.setStudent(student);
+				var eg4Service = new Eg4Service();
+				var promise = eg4Service.test4(eg4);
+				promise.then((response) => 
+				{
+					alert("Test 4 Successfull");
+				}, () => 
+				{
+					alert("Test 4 Failed");
+				});
+			}
+			function test()
+			{
+				var eg4Service = new Eg4Service();
+				var promise = eg4Service.test();
+				promise.then((response)=>
+				{
+					alert(response);
+				},()=>
+				{
+					alert("FAILED");
+				});
+			}
+		</script>
+	<head>
+	<body>
+		<div>
+			Test 1 & Test 3<br />
+			Enter X : <input type = "number" name = "x" id = "x"><br />
+			Enter Y : <input type = "text" name = "y" id = "y"><br />
+			<button type = "button" onclick = "test1()">GET Method Test 1</button>
+			&nbsp;&nbsp;&nbsp;
+			<button type = "button" onclick = "test3()">POST Method Test 3</button>
+		</div>
+		<div>
+			Test 2 & Test 4<br />
+			Enter Roll Number : <input type = "number" name = "rollNumber" id = "rollNumber"><br />
+			Enter Name : <input type = "text" name = "name" id = "name"><br />
+			Enter Date of Birth : <input type = "text" name = "dateOfBirth" id = "dateOfBirth"><br />
+			<button type = "button" onclick = "test2()">GET Method Test 2</button>
+			&nbsp;&nbsp;&nbsp;
+			<button type = "button" onclick = "test4()">POST Method Test 4</button>
+		</div>
+		<div>
+			<button type = "button" onclick ="test()">Testing</button>
+		</div>
+	</body>
+</html>

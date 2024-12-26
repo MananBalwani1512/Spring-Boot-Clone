@@ -1,0 +1,1 @@
+javac -classpath E:\Tomcat9\webapps\Spring-Boot-Clone\WEB-INF\classes;E:\Tomcat9\webapps\Spring-Boot-Clone\WEB-INF\lib\*;E:\Tomcat9\lib\*;. *.java

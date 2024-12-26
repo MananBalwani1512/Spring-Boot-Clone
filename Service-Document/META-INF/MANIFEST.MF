@@ -1,0 +1,23 @@
+Class-Path: ./lib/*.jar
+Main-Class: ServiceDocument
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+<web-app>
+	<servlet>
+		<servlet-name>SpringBootClone</servlet-name>
+		<servlet-class>com.springboot.clone.SpringBootClone</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SpringBootClone</servlet-name>
+		<url-pattern>/bobby/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>SpringBootInitializer</servlet-name>
+		<servlet-class>com.springboot.clone.SpringBootInitializer</servlet-class>
+		<init-param>
+			<param-name>SERVICE_PACKAGE_PREFIX</param-name>
+			<param-value>bobby</param-value>
+		</init-param>
+		<init-param>
+			<param-name>BASE_URL_PREFIX</param-name>
+			<param-value>bobby</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>GetJavascriptFiles</servlet-name>
+		<servlet-class>com.springboot.clone.GetJavascriptFiles</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetJavascriptFiles</servlet-name>
+		<url-pattern>/getJavascriptFiles</url-pattern>
+	</servlet-mapping>
+</web-app>
