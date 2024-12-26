@@ -2,8 +2,8 @@
 The Project Spring-Boot-Clone is created with intention of helping backend developers with writing the service classes easily without writing any code for servlets.
 ___
 ## Requirements
-1. [Apache Tomcat9](https://apacheLink) should be installed properly on the system.
-2. [Java](https://jdk) should be installed on the system.
+1. [Apache Tomcat9](https://tomcat.apache.org/download-90.cgi) should be installed properly on the system.
+2. [Java](https://www.oracle.com/in/java/technologies/javase/jdk11-archive-downloads.html) should be installed on the system.
 ___
 ## Steps for Setup
 1. Clone [Spring Boot Clone](https://github.com/MananBalwani1512/Spring-Boot-Clone) repository int the webapps of the Apache Tomcat9 Folder .
